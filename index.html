@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ELABBAR — ERP Produits de la Mer</title>
+  <meta name="description" content="ELABBAR — Système complet de gestion de production pour station de conditionnement de poisson">
+  <link rel="stylesheet" href="landing.css">
+</head>
+<body>
+  <!-- Video Background -->
+  <div class="video-container">
+    <video autoplay muted loop playsinline id="bg-video" poster="logo.png?v=3">
+      <source src="Minimalist_professional_animat.mp4" type="video/mp4">
+    </video>
+    <div class="video-overlay"></div>
+  </div>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <img src="logo.png?v=3" alt="ELABBAR Logo" class="nav-logo" onerror="this.style.display='none';">
+      <span>ELABBAR</span>
+    </div>
+    <ul class="navbar-nav">
+      <li><a href="#" class="active">Accueil</a></li>
+      <li><a href="#features">Fonctionnalités</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero Section & Login Box -->
+  <main class="landing-main">
+    <div class="hero-content">
+      <h1>L'Excellence dans la Traçabilité</h1>
+      <p>Le système ERP de nouvelle génération pour les industries de la pêche et de la valorisation des produits de la mer au Maroc.</p>
+    </div>
+    
+    <!-- Login Form (Glassmorphism) -->
+    <div class="login-card">
+      <div class="login-header">
+        <h2>Espace Client</h2>
+        <p>Veuillez vous identifier pour accéder à la station de conditionnement.</p>
+      </div>
+      <form id="loginForm" onsubmit="event.preventDefault(); window.location.href='app.html';">
+        <div class="input-group">
+          <label for="username">Identifiant</label>
+          <input type="text" id="username" name="username" value="admin" placeholder="Saisissez votre identifiant" required>
+        </div>
+        <div class="input-group">
+          <label for="password">Mot de passe</label>
+          <input type="password" id="password" name="password" value="admin" placeholder="Saisissez votre mot de passe" required>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn-login">Accès Rapide (Dev)</button>
+        </div>
+        <div class="form-footer">
+          <a href="#">(Mode développement : cliquez pour entrer)</a>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <!-- Features Section -->
+  <section id="features" class="section glass-section">
+    <div class="container">
+      <h2 class="section-title">Pourquoi choisir ELABBAR ?</h2>
+      <p class="section-subtitle">Une solution complète pensée pour les défis de l'industrie halieutique au Maroc.</p>
+      
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">📥</div>
+          <h3>Réception Automatisée</h3>
+          <p>Gérez vos arrivages, bateaux et la base de données de vos clients très facilement.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🏷️</div>
+          <h3>Traçabilité QR Code</h3>
+          <p>Générez et suivez chaque lot de bout en bout pour garantir la conformité ONSSA et Européenne.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🧊</div>
+          <h3>Gestion de Stock</h3>
+          <p>Cartographie visuelle de vos chambres froides et rotation intelligente (FIFO).</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">💰</div>
+          <h3>Facturation & Export</h3>
+          <p>Éditez vos bons de livraison et factures instantanément avec les taxes pré-calculées.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Advantages Section -->
+  <section id="advantages" class="section">
+    <div class="container">
+      <div class="advantages-wrapper">
+        <div class="adv-text">
+          <h2>L'IA au service de votre usine</h2>
+          <p>Fini les erreurs de saisie dans le froid. ELABBAR intègre la reconnaissance intelligente pour accélérer la cadence de vos opérateurs, avec une interface adaptée aux écrans tactiles industriels.</p>
+          <ul class="adv-list">
+            <li><span>✓</span> Mode hors ligne et synchronisation Cloud</li>
+            <li><span>✓</span> Multi-utilisateurs avec gestion des droits</li>
+            <li><span>✓</span> Mises à jour transparentes (SaaS)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer id="contact" class="footer">
+    <div class="container footer-content">
+      <div class="footer-brand">
+        <img src="logo.png?v=3" alt="ELABBAR Logo" class="nav-logo" onerror="this.style.display='none';">
+        <span>ELABBAR ERP</span>
+      </div>
+      <div class="footer-contact">
+        <p>Contactez-nous pour une démonstration :</p>
+        <p><strong>Email :</strong> contact@elabbar.ma</p>
+        <p><strong>Tél :</strong> +212 500 000 000</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 ELABBAR. Tous droits réservés.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = this.getAttribute('href');
+            if(target !== '#') {
+                document.querySelector(target).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            } else {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        });
+    });
+  </script>
+</body>
+</html>
