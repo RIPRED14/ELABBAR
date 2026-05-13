@@ -33,7 +33,7 @@ const Energie = {
             <span class="card-title">📈 Suivi des Températures (Scan IA)</span>
             <div style="display:flex; gap:10px;">
               <input type="file" id="enerTempOcrInput" accept="image/*" capture="environment" style="display:none" onchange="Temperatures.processOCR(event)">
-              <button class="btn btn-primary btn-sm" style="background:#0ea5e9;border-color:#0ea5e9;" onclick="document.getElementById('enerTempOcrInput').click()">📸 Scanner Relevé Temp.</button>
+              <button class="btn btn-primary btn-sm" style="background:#0ea5e9;border-color:#0ea5e9;" onclick="document.getElementById('enerTempOcrInput').click()">💼 Scanner par IA</button>
             </div>
           </div>
           <div class="card-body">

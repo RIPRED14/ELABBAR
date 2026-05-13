@@ -34,7 +34,11 @@ const Chambres = {
             <h2 class="page-title">Plan des Chambres</h2>
             <p class="page-subtitle">Suivi des capacités et de la température</p>
           </div>
-          <button class="btn btn-primary" onclick="Chambres.showLogTempModal()">🌡️ Relever Température</button>
+          <div style="display:flex; gap:10px;">
+            <input type="file" id="chambreTempOcrInput" accept="image/*" capture="environment" style="display:none" onchange="Temperatures.processOCR(event)">
+            <button class="btn btn-primary" style="background:#0ea5e9; border-color:#0ea5e9;" onclick="document.getElementById('chambreTempOcrInput').click()">💼 Scanner par IA</button>
+            <button class="btn btn-primary" onclick="Chambres.showLogTempModal()">🌡️ Relever Température</button>
+          </div>
         </div>
 
         <!-- Alerte Température -->

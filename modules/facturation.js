@@ -100,8 +100,8 @@ const Facturation = {
         <div class="card-body">
           <div style="display:flex;justify-content:flex-end;margin-bottom:15px;gap:10px;">
             <input type="file" id="ocrInput" accept="image/*" capture="environment" style="display:none" onchange="Facturation.processOCR(event)">
-            <button class="btn btn-primary" style="background:#0ea5e9;border-color:#0ea5e9;" onclick="document.getElementById('ocrInput').click()">📸 Lire Facture (IA)</button>
-            <button class="btn btn-primary" onclick="Facturation.startScanner()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:5px;"><path d="M4 7V4h3"/><path d="M20 7V4h-3"/><path d="M4 17v3h3"/><path d="M20 17v3h-3"/><rect x="7" y="7" width="10" height="10" rx="2"/></svg> Scanner Facture (QR)</button>
+            <button class="btn btn-primary" style="background:#0ea5e9;border-color:#0ea5e9;" onclick="document.getElementById('ocrInput').click()">💼 Scanner par IA</button>
+            <button class="btn btn-primary" onclick="Facturation.startScanner()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:5px;"><path d="M4 7V4h3"/><path d="M20 7V4h-3"/><path d="M4 17v3h3"/><path d="M20 17v3h-3"/><rect x="7" y="7" width="10" height="10" rx="2"/></svg> Scanner QR</button>
           </div>
           
           <div id="ocrLoadingArea" style="display:none; text-align:center; padding:20px; background:rgba(15,23,42,0.45); border:1px dashed rgba(148,163,184,0.35); border-radius:8px; margin-bottom:15px;">
