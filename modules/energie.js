@@ -30,6 +30,22 @@ const Energie = {
 
         <div class="card" style="margin-top:18px;">
           <div class="card-header">
+            <span class="card-title">📈 Suivi des Températures (Scan IA)</span>
+            <div style="display:flex; gap:10px;">
+              <input type="file" id="enerTempOcrInput" accept="image/*" capture="environment" style="display:none" onchange="Temperatures.processOCR(event)">
+              <button class="btn btn-primary btn-sm" style="background:#0ea5e9;border-color:#0ea5e9;" onclick="document.getElementById('enerTempOcrInput').click()">📸 Scanner Relevé Temp.</button>
+            </div>
+          </div>
+          <div class="card-body">
+            <div id="enerTempOcrLoading" style="display:none; text-align:center; padding:15px; background:rgba(15,23,42,0.45); border:1px dashed var(--accent-cyan); border-radius:8px; margin-bottom:15px;">
+              <div style="color:var(--accent-cyan); font-weight:bold;">🤖 Analyse en cours...</div>
+            </div>
+            <div style="height:250px;"><canvas id="tempChartEnergie"></canvas></div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:18px;">
+          <div class="card-header">
             <span class="card-title">📝 Saisie mensuelle énergie</span>
             <button class="btn btn-primary btn-sm" onclick="Energie.saveEnergie()">💾 Enregistrer</button>
           </div>
@@ -56,6 +72,34 @@ const Energie = {
       </div>
     `;
     this.updateKPI();
+    setTimeout(() => this.renderChart(), 100);
+  },
+
+  renderChart() {
+    const ctx = document.getElementById('tempChartEnergie')?.getContext('2d');
+    if (!ctx) return;
+    const today = new Date().toISOString().split('T')[0];
+    const data = (App.data.relevesTemp || []).filter(r => r.date === today);
+    data.sort((a,b) => a.heure.localeCompare(b.heure));
+    const chambers = [...new Set(data.map(r => r.chambre))];
+    const colors = ['#0ea5e9', '#10b981', '#f59e0b', '#ef4444'];
+    const datasets = chambers.slice(0,4).map((c, i) => ({
+      label: c,
+      data: data.filter(r => r.chambre === c).map(r => ({ x: r.heure, y: r.temperature })),
+      borderColor: colors[i],
+      tension: 0.3,
+      pointRadius: 4
+    }));
+    if (this.chart) this.chart.destroy();
+    this.chart = new Chart(ctx, {
+      type: 'line',
+      data: { datasets },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: { y: { suggestedMax: 0, suggestedMin: -25 } }
+      }
+    });
   },
 
   zones: [
@@ -184,6 +228,12 @@ const Energie = {
     const conso = parseFloat(document.getElementById('eConsoMensuelle').value) || 0;
     if (conso < 0) {
       App.toast('La consommation énergie doit être positive', 'error');
+      return;
+    }
+    const apiKey = App.data.parametres?.geminiApiKey;
+    if (!apiKey || apiKey.trim() === "") {
+      App.toast("❌ Erreur : Clé API Gemini absente. Allez dans 'Paramètres' pour la saisir.", "error");
+      event.target.value = '';
       return;
     }
     const mois = document.getElementById('eMois')?.value || this.getCurrentMonthKey();

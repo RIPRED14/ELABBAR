@@ -1671,9 +1671,18 @@ const App = {
         this.data = JSON.parse(JSON.stringify(this.defaults));
         this.saveData();
       }
-      // Ensure all keys exist
+      // Ensure all keys exist (Deep check for parametres)
       for (const key in this.defaults) {
-        if (!(key in this.data)) this.data[key] = JSON.parse(JSON.stringify(this.defaults[key]));
+        if (!(key in this.data)) {
+          this.data[key] = JSON.parse(JSON.stringify(this.defaults[key]));
+        } else if (key === 'parametres') {
+          // Deep sync for parametres to ensure new keys like geminiApiKey are added
+          for (const pKey in this.defaults.parametres) {
+            if (!(pKey in this.data.parametres)) {
+              this.data.parametres[pKey] = this.defaults.parametres[pKey];
+            }
+          }
+        }
       }
       // Force sync of new detailed especes (Version 4)
       if (!localStorage.getItem('gestprod_v8_ntsamak_especes_v4_force')) {
