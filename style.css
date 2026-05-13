@@ -833,18 +833,36 @@ tbody tr:last-child td { border-bottom: none; }
 
 /* --- Print --- */
 @media print {
-  .sidebar, .main-header, .tabs, .form-section, .btn, button, .alerts-banner, #stockageFormContainer, #saisieFormContainer { display: none !important; }
+  @page { margin: 1cm; size: auto; }
+  .sidebar, .main-header, .tabs, .form-section, .btn, button, .btn-icon, .alerts-banner, 
+  #stockageFormContainer, #saisieFormContainer, .card-header .btn-icon,
+  .no-print { display: none !important; }
+  
   .main-content { margin-left: 0 !important; width: 100% !important; padding: 0 !important; }
-  .page-content { padding: 10px !important; }
-  body { background: white; color: black; }
-  .card { border: none !important; box-shadow: none !important; margin: 0 !important; }
-  .card-header { padding: 0 0 10px 0 !important; border-bottom: 2px solid #000 !important; margin-bottom: 15px !important; }
-  .kpi-grid { display: grid !important; grid-template-columns: repeat(4, 1fr) !important; gap: 10px !important; }
-  .kpi-card { border: 1px solid #ddd !important; padding: 10px !important; break-inside: avoid; }
-  table { width: 100% !important; border-collapse: collapse !important; }
-  th, td { border: 1px solid #ddd !important; padding: 6px !important; }
-  .chart-container { break-inside: avoid; }
-  .badge { border: 1px solid #333 !important; color: #000 !important; background: transparent !important; }
+  .page-content { padding: 0 !important; }
+  body { background: white !important; color: black !important; font-size: 10pt; }
+  
+  .card { border: 1px solid #000 !important; box-shadow: none !important; margin: 0 0 1cm 0 !important; break-inside: avoid; border-radius: 0 !important; }
+  .card-header { 
+    background: #f0f0f0 !important; 
+    border-bottom: 1.5pt solid #000 !important; 
+    padding: 8pt !important;
+    color: #000 !important;
+  }
+  .card-title { color: #000 !important; font-weight: bold !important; text-transform: uppercase; }
+  
+  .kpi-grid { display: grid !important; grid-template-columns: repeat(4, 1fr) !important; gap: 5pt !important; margin-bottom: 1cm !important; }
+  .kpi-card { border: 1pt solid #000 !important; padding: 5pt !important; break-inside: avoid; background: #fff !important; color: #000 !important; }
+  .kpi-value { color: #000 !important; font-weight: bold !important; font-size: 14pt !important; }
+  .kpi-icon { display: none !important; }
+  
+  table { width: 100% !important; border-collapse: collapse !important; margin-bottom: 10pt !important; }
+  th { background: #e0e0e0 !important; color: #000 !important; border: 1pt solid #000 !important; padding: 4pt !important; text-transform: uppercase; font-size: 8pt; }
+  td { border: 1pt solid #ccc !important; padding: 4pt !important; font-size: 8pt; color: #000 !important; }
+  .td-bold { font-weight: bold !important; }
+  
+  .chart-container, canvas { max-width: 100% !important; height: auto !important; break-inside: avoid; }
+  .badge { border: 1pt solid #000 !important; color: #000 !important; background: transparent !important; padding: 2pt 4pt !important; border-radius: 0 !important; }
 }
 
 /* --- Fish Pulse Animation --- */

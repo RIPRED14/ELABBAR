@@ -457,6 +457,10 @@ Assure-toi que les nombres utilisent un point pour les décimales. Si la quantit
       }
 
       let textResponse = result.candidates[0].content.parts[0].text;
+      
+      // Sanitization: Remove markdown code blocks if present
+      textResponse = textResponse.replace(/```json/g, '').replace(/```/g, '').trim();
+      
       const data = JSON.parse(textResponse);
 
       if (data.fournisseur) document.getElementById('fFournisseur').value = data.fournisseur;

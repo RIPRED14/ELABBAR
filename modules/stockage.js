@@ -2073,22 +2073,33 @@ Notes:
 
     const chambreLabels = { chambre1: 'Chambre 1', chambre2: 'Chambre 2', entreposage: 'Entreposage' };
 
-    App.showModal('✅ Confirmer Validation', `
-      <div style="text-align:center;padding:20px 0;">
-        <div style="font-size:2.5rem;margin-bottom:10px;">✅</div>
-        <p style="font-size:1.1rem;margin-bottom:8px;">Valider l'entrée en stock de ce lot ?</p>
-        <p style="color:var(--text-muted);font-size:0.9rem;">
-          <strong>${e.espece} ${e.calibre}</strong> — ${App.formatNumber(e.poidsPF,2)} kg<br>
-          Origine: <span class="badge ${e.origine==='Traitement'?'badge-warning':'badge-info'}">${e.origine}</span><br>
-          Destination: <span class="badge badge-purple">${chambreLabels[e.chambreDestination]||e.chambreDestination}</span>
-        </p>
-        <p style="color:var(--text-muted);font-size:0.82rem;margin-top:12px;">
-          Cela va créer une entrée dans le <strong>stock principal</strong> et retirer l'élément de la liste d'attente.
-        </p>
+    App.showModal('✅ Valider Entrée en Stock', `
+      <div style="padding:10px 0;">
+        <div style="text-align:center;margin-bottom:20px;">
+          <div style="font-size:2.5rem;margin-bottom:10px;">✅</div>
+          <p style="font-size:1.1rem;font-weight:700;">Confirmer l'entrée en stock</p>
+          <p style="color:var(--text-muted);font-size:0.9rem;">${e.espece} ${e.calibre} — ${App.formatNumber(e.poidsPF,2)} kg</p>
+        </div>
+
+        <div class="form-section">
+          <div class="form-section-title">❄️ Destination finale</div>
+          <div class="form-group">
+            <label class="form-label">Confirmer ou changer la chambre *</label>
+            <select class="form-select" id="validateToChambre" style="font-size:1rem;padding:12px;">
+              <option value="chambre1" ${e.chambreDestination==='chambre1'?'selected':''}>❄️ Chambre de Stockage 1</option>
+              <option value="chambre2" ${e.chambreDestination==='chambre2'?'selected':''}>❄️ Chambre de Stockage 2</option>
+              <option value="entreposage" ${e.chambreDestination==='entreposage'?'selected':''}>📦 Entreposage</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:8px;padding:12px;margin-top:14px;font-size:0.82rem;color:var(--accent-green);">
+          L'élément sera déplacé de la liste d'attente vers l'inventaire actif de la chambre sélectionnée.
+        </div>
       </div>
     `, `
       <button class="btn btn-outline" onclick="App.closeModal()">Annuler</button>
-      <button class="btn btn-success" onclick="Stockage.doValidatePending(${id})">✅ Confirmer</button>
+      <button class="btn btn-success" style="min-width:180px;" onclick="Stockage.doValidatePending(${id})">✅ Valider l'entrée</button>
     `);
   },
 
@@ -2097,7 +2108,7 @@ Notes:
     if (!e || e.status !== 'pending') return;
 
     if (!App.data.stockage) App.data.stockage = [];
-
+    const chambre = document.getElementById('validateToChambre')?.value || e.chambreDestination || 'chambre1';
     const ref = this.generateRef();
     const dateFormatted = App.formatDateFR ? App.formatDateFR(e.dateEnvoi) : e.dateEnvoi;
     const palette = `P1 | ${e.client} | ${e.espece} | ${App.formatNumber(e.poidsPF,2)}kg | ${dateFormatted} | ${e.origine}`;
@@ -2130,7 +2141,7 @@ Notes:
         pdsBrutTotal: e.poidsPF || 0,
         pdsNetTotal: e.poidsPF || 0,
         temperature: -18,
-        chambre: e.chambreDestination || 'chambre1',
+        chambre: chambre,
         notaBene: `Provenance: ${e.origine} — Production #${e.productionId}`
       }]
     };

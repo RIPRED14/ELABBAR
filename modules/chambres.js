@@ -31,13 +31,15 @@ const Chambres = {
       <div class="fade-in">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;">
           <div>
-            <h2 class="page-title">Plan des Chambres</h2>
-            <p class="page-subtitle">Suivi des capacités et de la température</p>
+            <h2 class="page-title">Gestion des Chambres Froides</h2>
+            <p class="page-subtitle">Suivi des capacités, températures (Thermographe 24h) et stocks</p>
           </div>
           <div style="display:flex; gap:10px;">
             <input type="file" id="chambreTempOcrInput" accept="image/*" capture="environment" style="display:none" onchange="Temperatures.processOCR(event)">
+            <input type="file" id="thermographOcrInput" accept="image/*" capture="environment" style="display:none" onchange="Temperatures.processThermographAI(event)">
             <button class="btn btn-primary" style="background:#0ea5e9; border-color:#0ea5e9;" onclick="document.getElementById('chambreTempOcrInput').click()">💼 Scanner par IA</button>
-            <button class="btn btn-primary" onclick="Chambres.showLogTempModal()">🌡️ Relever Température</button>
+            <button class="btn btn-primary" style="background:var(--accent-purple); border-color:var(--accent-purple);" onclick="document.getElementById('thermographOcrInput').click()">📈 Scanner Thermographe (AI)</button>
+            <button class="btn btn-primary" onclick="Chambres.showLogTempModal()">🌡️ Relever Thermographe</button>
           </div>
         </div>
 
@@ -51,7 +53,7 @@ const Chambres = {
           <!-- CHAMBRE 1 -->
           <div class="card" onclick="Chambres.showChambreDetail('chambre1')" style="position:relative;cursor:pointer;">
             <div class="card-header" style="background:var(--gradient-purple);color:white;border-radius:var(--radius-md) var(--radius-md) 0 0;">
-              <span class="card-title">❄️ Chambre de Stockage 1</span>
+              <span class="card-title">❄️ Chambre 1</span>
             </div>
             <div class="card-body">
               <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
@@ -82,7 +84,7 @@ const Chambres = {
           <!-- CHAMBRE 2 -->
           <div class="card" onclick="Chambres.showChambreDetail('chambre2')" style="position:relative;cursor:pointer;">
             <div class="card-header" style="background:var(--gradient-blue);color:white;border-radius:var(--radius-md) var(--radius-md) 0 0;">
-              <span class="card-title">❄️ Chambre de Stockage 2</span>
+              <span class="card-title">❄️ Chambre 2</span>
             </div>
             <div class="card-body">
               <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
@@ -320,7 +322,15 @@ const Chambres = {
         <div class="kpi-card purple" style="padding:14px;"><div class="kpi-label">Caisses disponibles</div><div class="kpi-value" style="font-size:1.5rem;">${App.formatNumber(group.caisses,0)}</div></div>
         <div class="kpi-card green" style="padding:14px;"><div class="kpi-label">Poids net disponible</div><div class="kpi-value" style="font-size:1.5rem;">${App.formatNumber(group.poids,2)}<span class="kpi-unit">kg</span></div></div>
       </div>
-      <div class="table-container" style="max-height:55vh;overflow:auto;">
+
+      <div class="card no-print" style="margin-bottom:16px;">
+        <div class="card-header"><span class="card-title">📈 Historique de température (7 derniers jours)</span></div>
+        <div class="card-body" style="height:250px;">
+          <canvas id="detailedChambreChart"></canvas>
+        </div>
+      </div>
+
+      <div class="table-container" style="max-height:40vh;overflow:auto;">
         <table class="table-hover">
           <thead>
             <tr>
@@ -355,6 +365,8 @@ const Chambres = {
     App.showModal(`📦 Contenu - ${label}`, body, `
       <button class="btn btn-outline" onclick="App.closeModal()">Fermer</button>
     `);
+
+    setTimeout(() => this.renderDetailedChart(chambre), 100);
   },
 
   getProcessingInventory() {
@@ -531,6 +543,69 @@ const Chambres = {
         }]
       },
       options: options
+    });
+  },
+
+  renderDetailedChart(chambre) {
+    const canvas = document.getElementById('detailedChambreChart');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    
+    // Combine App.data.chambresHistory and App.data.relevesTemp
+    // 1. Get last 7 days of history
+    const history = (App.data.chambresHistory || []).slice(-7);
+    
+    // 2. Map labels and data
+    const labels = history.map(h => App.formatDateFR(h.date));
+    const data = history.map(h => h[chambre]);
+
+    // 3. Add today's detailed readings if any
+    const today = new Date().toISOString().split('T')[0];
+    const detailed = (App.data.relevesTemp || []).filter(r => r.date === today && (
+      (chambre === 'chambre1' && r.chambre === 'Stockage 01') ||
+      (chambre === 'chambre2' && r.chambre === 'Stockage 02') ||
+      (chambre === 'entreposage' && r.chambre === 'Entreposage')
+    ));
+
+    if (detailed.length > 0) {
+      // If we have detailed data for today, maybe we show a different chart or just append
+      // For simplicity, let's just show the 7 day trend
+    }
+
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Température (°C)',
+          data: data,
+          borderColor: '#0ea5e9',
+          backgroundColor: 'rgba(14, 165, 233, 0.1)',
+          fill: true,
+          tension: 0.4,
+          pointRadius: 6,
+          pointHoverRadius: 8
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { 
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: (ctx) => `Temp: ${ctx.parsed.y}°C`
+            }
+          }
+        },
+        scales: {
+          y: { 
+            suggestedMin: -25, 
+            suggestedMax: -10,
+            ticks: { stepSize: 2 }
+          }
+        }
+      }
     });
   },
 

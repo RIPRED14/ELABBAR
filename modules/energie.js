@@ -102,12 +102,19 @@ const Energie = {
     });
   },
 
-  zones: [
-    { nom: 'Stockage 01', tempInt: -18, tempExt: 15, transmission: 33.60, produit: 0, respiration: 0, personnel: 0.27, eclairage: 0.08, ventilateur: 420, infiltration: 25.50 },
-    { nom: 'Stockage 02', tempInt: -18, tempExt: 15, transmission: 33.60, produit: 0, respiration: 0, personnel: 0.27, eclairage: 0.08, ventilateur: 420, infiltration: 25.50 },
-    { nom: 'Entreposage', tempInt: -18, tempExt: 15, transmission: 32.95, produit: 0, respiration: 0, personnel: 0.27, eclairage: 0.08, ventilateur: 350, infiltration: 35.29 },
-    { nom: 'Tunnel 01', tempInt: -35, tempExt: 15, transmission: 107.39, produit: 360, respiration: 3.11, personnel: 0, eclairage: 0.08, ventilateur: 720, infiltration: 0 },
-  ],
+  get zones() {
+    const history = App.data.chambresHistory || [];
+    const last = history[history.length - 1] || {};
+    const t1 = typeof last.chambre1 === 'number' ? last.chambre1 : -18;
+    const t2 = typeof last.chambre2 === 'number' ? last.chambre2 : -18;
+    const te = typeof last.entreposage === 'number' ? last.entreposage : -18;
+    return [
+      { nom: 'Stockage 01', tempInt: t1, tempExt: 15, transmission: (15 - t1) * 1.018, produit: 0, respiration: 0, personnel: 0.27, eclairage: 0.08, ventilateur: 420, infiltration: 25.50 },
+      { nom: 'Stockage 02', tempInt: t2, tempExt: 15, transmission: (15 - t2) * 1.018, produit: 0, respiration: 0, personnel: 0.27, eclairage: 0.08, ventilateur: 420, infiltration: 25.50 },
+      { nom: 'Entreposage', tempInt: te, tempExt: 15, transmission: (15 - te) * 1.0, produit: 0, respiration: 0, personnel: 0.27, eclairage: 0.08, ventilateur: 350, infiltration: 35.29 },
+      { nom: 'Tunnel 01', tempInt: -35, tempExt: 15, transmission: 107.39, produit: 360, respiration: 3.11, personnel: 0, eclairage: 0.08, ventilateur: 720, infiltration: 0 },
+    ];
+  },
 
   equipRDC: [
     { nom: 'Réglettes doubles', puissance: 36, quantite: 74, heures: 8 },

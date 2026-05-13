@@ -272,5 +272,93 @@ Notes:
       loading.style.display = 'none';
       event.target.value = '';
     }
+  },
+
+  async processThermographAI(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const apiKey = App.data.parametres?.geminiApiKey;
+    if (!apiKey) {
+      App.toast("Clé API Gemini manquante.", "error");
+      return;
+    }
+
+    // Reuse the loading overlay if available or use a toast
+    App.toast("Analyse du thermographe en cours...", "info");
+
+    try {
+      const base64Data = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = error => reject(error);
+        reader.readAsDataURL(file);
+      });
+
+      const prompt = `Analyse cette image de thermographe (courbe de température). 
+Extrait les points de données de la courbe.
+Renvoie un objet JSON avec la structure suivante :
+{
+  "date": "YYYY-MM-DD",
+  "points": [
+    { "heure": "HH:mm", "temperature": -18.5 }
+  ],
+  "chambre": "Nom de la chambre si visible (ex: Stockage 01)",
+  "analyse_energie": "Bref commentaire sur la stabilité de la courbe"
+}
+Important :
+- Extrait au moins un point toutes les 2 heures si possible.
+- Assure-toi que les températures sont précises (décimales autorisées).
+- Ne renvoie QUE le JSON brut, sans backticks markdown.`;
+
+      const response = await fetch(\`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=\${apiKey}\`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{
+            parts: [
+              { text: prompt },
+              { inline_data: { mime_type: file.type || "image/jpeg", data: base64Data } }
+            ]
+          }],
+          generationConfig: { response_mime_type: "application/json" }
+        })
+      });
+
+      if (!response.ok) throw new Error("Erreur API Gemini");
+      const result = await response.json();
+      let text = result.candidates[0].content.parts[0].text;
+      text = text.replace(/```json/g, '').replace(/```/g, '').trim();
+      const data = JSON.parse(text);
+
+      if (data.points && data.points.length > 0) {
+        const chamberName = data.chambre || 'Stockage 01';
+        data.points.forEach(p => {
+          App.data.relevesTemp.push({
+            id: Date.now() + Math.random(),
+            date: data.date || App.formatDate(new Date()),
+            heure: p.heure,
+            chambre: chamberName,
+            temperature: p.temperature
+          });
+        });
+        App.saveData();
+        
+        // If we are on the chambers page, refresh it
+        if (typeof Chambres !== 'undefined' && Chambres.render) Chambres.render();
+        // If we are on temperatures page, refresh it
+        if (this.render) this.render();
+
+        App.toast(\`Thermographe analysé : \${data.points.length} points extraits pour \${chamberName}.\`, 'success');
+        if (data.analyse_energie) {
+          setTimeout(() => App.toast(\`Analyse : \${data.analyse_energie}\`, 'info'), 2000);
+        }
+      }
+    } catch (err) {
+      console.error(err);
+      App.toast("Erreur lors de l'analyse du thermographe.", "error");
+    } finally {
+      event.target.value = '';
+    }
   }
 };
