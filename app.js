@@ -995,6 +995,7 @@ const App = {
     sortiesStockage: [],
     qrCodes: [],
     factures: [],
+    relevesTemp: [],
     clients: [
           {
                 "nom": "FISH & FOOD TRAITE...",
@@ -1764,6 +1765,7 @@ const App = {
       parametres: 'Paramètres',
       facturation: 'Facturation & Charges',
       qrcodes: 'Gestion des QR Codes',
+      temperatures: 'Suivi des Températures',
     };
     document.getElementById('headerTitle').textContent = titles[page] || page;
 
@@ -1784,6 +1786,7 @@ const App = {
         case 'rapports': Rapports.render(); break;
         case 'parametres': Parametres.render(); break;
         case 'qrcodes': QRCodes.render(); break;
+        case 'temperatures': Temperatures.render(); break;
       }
     }, 50);
   },
