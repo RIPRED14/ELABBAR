@@ -2069,32 +2069,36 @@ Notes:
 
   validatePendingEntry(id) {
     const e = (App.data.pendingStorageEntries || []).find(x => x.id === id);
-    if (!e || e.status !== 'pending') { App.toast('Élément introuvable ou déjà validé', 'error'); return; }
+    if (!e) return;
 
     const chambreLabels = { chambre1: 'Chambre 1', chambre2: 'Chambre 2', entreposage: 'Entreposage' };
 
-    App.showModal('✅ Valider Entrée en Stock', `
+    App.showModal('✅ Valider l\'entrée en stock', `
       <div style="padding:10px 0;">
-        <div style="text-align:center;margin-bottom:20px;">
-          <div style="font-size:2.5rem;margin-bottom:10px;">✅</div>
-          <p style="font-size:1.1rem;font-weight:700;">Confirmer l'entrée en stock</p>
-          <p style="color:var(--text-muted);font-size:0.9rem;">${e.espece} ${e.calibre} — ${App.formatNumber(e.poidsPF,2)} kg</p>
-        </div>
-
-        <div class="form-section">
-          <div class="form-section-title">❄️ Destination finale</div>
-          <div class="form-group">
-            <label class="form-label">Confirmer ou changer la chambre *</label>
-            <select class="form-select" id="validateToChambre" style="font-size:1rem;padding:12px;">
-              <option value="chambre1" ${e.chambreDestination==='chambre1'?'selected':''}>❄️ Chambre de Stockage 1</option>
-              <option value="chambre2" ${e.chambreDestination==='chambre2'?'selected':''}>❄️ Chambre de Stockage 2</option>
-              <option value="entreposage" ${e.chambreDestination==='entreposage'?'selected':''}>📦 Entreposage</option>
-            </select>
+        <div style="background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.25); border-radius:12px; padding:18px; margin-bottom:20px;">
+          <div style="font-weight:800; font-size:1.1rem; margin-bottom:12px; color:var(--accent-green); display:flex; align-items:center; gap:8px;">
+            <span>📋</span> Détails du lot
+          </div>
+          <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:12px; font-size:0.92rem;">
+            <div><span style="color:var(--text-muted);">Espèce :</span> <span class="badge badge-info">${e.espece}</span></div>
+            <div><span style="color:var(--text-muted);">Calibre :</span> <strong>${e.calibre}</strong></div>
+            <div><span style="color:var(--text-muted);">Poids :</span> <strong>${e.poidsPF} kg</strong></div>
+            <div><span style="color:var(--text-muted);">Client :</span> <strong>${e.client}</strong></div>
+            <div><span style="color:var(--text-muted);">Origine :</span> <strong>${e.origine}</strong></div>
+            <div><span style="color:var(--text-muted);">Chambre Initiale :</span> <span class="badge badge-purple">${chambreLabels[e.chambreDestination] || e.chambreDestination}</span></div>
           </div>
         </div>
 
-        <div style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:8px;padding:12px;margin-top:14px;font-size:0.82rem;color:var(--accent-green);">
-          L'élément sera déplacé de la liste d'attente vers l'inventaire actif de la chambre sélectionnée.
+        <div class="form-group">
+          <label class="form-label" style="font-weight:800; color:var(--accent-purple-light);">📍 Confirmer ou Modifier la chambre de destination</label>
+          <select id="validateToChambre" class="form-select" style="font-size:1.05rem; padding:12px; border:2px solid var(--accent-purple);">
+            <option value="chambre1" ${e.chambreDestination==='chambre1'?'selected':''}>❄️ Chambre 1</option>
+            <option value="chambre2" ${e.chambreDestination==='chambre2'?'selected':''}>❄️ Chambre 2</option>
+            <option value="entreposage" ${e.chambreDestination==='entreposage'?'selected':''}>📦 Entreposage</option>
+          </select>
+          <p style="font-size:0.75rem; color:var(--text-muted); margin-top:6px;">
+            Vous pouvez modifier la chambre si le lot a été déplacé physiquement.
+          </p>
         </div>
       </div>
     `, `

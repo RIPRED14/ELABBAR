@@ -326,6 +326,17 @@ const Facturation = {
       return data;
     } catch(e) {
       return null;
+      let cleanText = text.replace(/```json|```/g, '').trim();
+      
+      try {
+        const data = JSON.parse(cleanText);
+        console.log("OCR Result:", data);
+        this.fillFormWithOCR(data);
+        App.toast("Facture analysée avec succès", "success");
+      } catch (e) {
+        console.error("JSON Parse Error:", e, "Cleaned Text:", cleanText);
+        App.toast("Erreur de lecture du format IA. Vérifiez la console.", "error");
+      }
     }
   },
 

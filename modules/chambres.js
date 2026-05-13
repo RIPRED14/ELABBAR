@@ -34,12 +34,21 @@ const Chambres = {
             <h2 class="page-title">Gestion des Chambres Froides</h2>
             <p class="page-subtitle">Suivi des capacités, températures (Thermographe 24h) et stocks</p>
           </div>
-          <div style="display:flex; gap:10px;">
+          <div style="display:flex; gap:12px; align-items:center;">
             <input type="file" id="chambreTempOcrInput" accept="image/*" capture="environment" style="display:none" onchange="Temperatures.processOCR(event)">
             <input type="file" id="thermographOcrInput" accept="image/*" capture="environment" style="display:none" onchange="Temperatures.processThermographAI(event)">
-            <button class="btn btn-primary" style="background:#0ea5e9; border-color:#0ea5e9;" onclick="document.getElementById('chambreTempOcrInput').click()">💼 Scanner par IA</button>
-            <button class="btn btn-primary" style="background:var(--accent-purple); border-color:var(--accent-purple);" onclick="document.getElementById('thermographOcrInput').click()">📈 Scanner Thermographe (AI)</button>
-            <button class="btn btn-primary" onclick="Chambres.showLogTempModal()">🌡️ Relever Thermographe</button>
+            
+            <button id="btnScanTemp" class="btn" style="background:#0ea5e9; color:white; border:none; padding:10px 16px; display:flex; align-items:center; gap:8px;" onclick="document.getElementById('chambreTempOcrInput').click()">
+              <span>💼</span> Scanner par IA
+            </button>
+            
+            <button id="btnScanThermo" class="btn" style="background:var(--accent-purple); color:white; border:none; padding:10px 16px; display:flex; align-items:center; gap:8px;" onclick="document.getElementById('thermographOcrInput').click()">
+              <span>📈</span> Scanner Thermographe (AI)
+            </button>
+            
+            <button id="btnLogManual" class="btn btn-primary" style="padding:10px 16px;" onclick="Chambres.showLogTempModal()">
+              <span>🌡️</span> Relever Thermographe
+            </button>
           </div>
         </div>
 
