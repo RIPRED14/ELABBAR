@@ -284,7 +284,9 @@ Notes:
       return;
     }
 
-    // Reuse the loading overlay if available or use a toast
+    // Show loading overlay
+    const loading = document.getElementById('tempOcrLoading') || document.getElementById('enerTempOcrLoading');
+    if (loading) loading.style.display = 'block';
     App.toast("Analyse du thermographe en cours...", "info");
 
     try {
@@ -358,6 +360,8 @@ Important :
       console.error(err);
       App.toast("Erreur lors de l'analyse du thermographe.", "error");
     } finally {
+      const loading = document.getElementById('tempOcrLoading') || document.getElementById('enerTempOcrLoading');
+      if (loading) loading.style.display = 'none';
       event.target.value = '';
     }
   }

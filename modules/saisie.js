@@ -1811,8 +1811,8 @@ const Saisie = {
             <div class="form-group">
               <label class="form-label">Chambre de froid *</label>
               <select class="form-select" id="sendToChambre" style="font-size:1rem;padding:12px;">
-                <option value="chambre1">❄️ Chambre de Stockage 1</option>
-                <option value="chambre2">❄️ Chambre de Stockage 2</option>
+                <option value="chambre1">❄️ Chambre 1</option>
+                <option value="chambre2">❄️ Chambre 2</option>
                 <option value="entreposage">📦 Entreposage</option>
               </select>
             </div>
