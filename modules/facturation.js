@@ -477,7 +477,7 @@ Assure-toi que les nombres utilisent un point pour les décimales. Si la quantit
       
     } catch (err) {
       console.error(err);
-      App.toast(`Erreur : ${err.message}`, "error");
+      App.toast(`DEBUG ANTIGRAVITY : ${err.message}`, "error");
     } finally {
       document.getElementById('ocrLoadingArea').style.display = 'none';
       event.target.value = ''; 
