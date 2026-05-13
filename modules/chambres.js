@@ -34,20 +34,20 @@ const Chambres = {
             <h2 class="page-title">Gestion des Chambres Froides</h2>
             <p class="page-subtitle">Suivi des capacités, températures (Thermographe 24h) et stocks</p>
           </div>
-          <div style="display:flex; gap:12px; align-items:center;">
+          <div style="display:flex !important; gap:15px !important; align-items:center !important; visibility:visible !important;">
             <input type="file" id="chambreTempOcrInput" accept="image/*" capture="environment" style="display:none" onchange="Temperatures.processOCR(event)">
             <input type="file" id="thermographOcrInput" accept="image/*" capture="environment" style="display:none" onchange="Temperatures.processThermographAI(event)">
             
-            <button id="btnScanTemp" class="btn" style="background:#0ea5e9; color:white; border:none; padding:10px 16px; display:flex; align-items:center; gap:8px;" onclick="document.getElementById('chambreTempOcrInput').click()">
-              <span>💼</span> Scanner par IA
+            <button id="btnScanTemp" class="btn" style="background:#ff5722 !important; color:white !important; border:none !important; padding:12px 20px !important; font-weight:bold !important; display:block !important; cursor:pointer !important;" onclick="document.getElementById('chambreTempOcrInput').click()">
+              💼 SCANNER TEMP (IA)
             </button>
             
-            <button id="btnScanThermo" class="btn" style="background:var(--accent-purple); color:white; border:none; padding:10px 16px; display:flex; align-items:center; gap:8px;" onclick="document.getElementById('thermographOcrInput').click()">
-              <span>📈</span> Scanner Thermographe (AI)
+            <button id="btnScanThermo" class="btn" style="background:#00bcd4 !important; color:white !important; border:none !important; padding:12px 20px !important; font-weight:bold !important; display:block !important; cursor:pointer !important;" onclick="document.getElementById('thermographOcrInput').click()">
+              📈 SCANNER THERMO (IA)
             </button>
             
-            <button id="btnLogManual" class="btn btn-primary" style="padding:10px 16px;" onclick="Chambres.showLogTempModal()">
-              <span>🌡️</span> Relever Thermographe
+            <button id="btnLogManual" class="btn" style="background:#1a237e !important; color:white !important; border:none !important; padding:12px 20px !important; font-weight:bold !important; display:block !important; cursor:pointer !important;" onclick="Chambres.showLogTempModal()">
+              🌡️ RELEVÉ MANUEL
             </button>
           </div>
         </div>
